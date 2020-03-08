@@ -130,3 +130,7 @@ Serveral digital image watermark algorithms implement with C++/OpenCV
 #### 5.1、全局DCT数字图像水印
 
 #### 5.2、分块DCT数字图像水印
+
+
+
+pkg-config --cflags --libs /usr/local/Cellar/opencv/4.2.0_3/lib/pkgconfig/opencv4.pc
