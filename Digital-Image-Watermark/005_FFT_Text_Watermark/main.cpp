@@ -306,6 +306,6 @@ int main(int argc, char** argv)
 	// imshow("ʵ��һˮӡ��ȡ", imgFly1); // freq 표시
 	imwrite(env_result_fft, imgFly1 * 255); // freq 이미지 저장
 
-	cv::waitKey(0);
+	// cv::waitKey(0);
 	return 0;
 }
