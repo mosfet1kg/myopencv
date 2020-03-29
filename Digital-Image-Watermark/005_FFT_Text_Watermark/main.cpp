@@ -124,11 +124,13 @@ cv::Mat WaterMarkText::addTextWatermarkSingleChannel(const cv::Mat &input, const
 	{
 		num = log(abs(maxv));
 	}
+	// FONT_HERSHEY_DUPLEX
+	// FONT_HERSHEY_TRIPLEX 너무 연함
 	putText(complete, text, cv::Point(input.cols * 0.2222, input.rows * 0.2222),
-		cv::FONT_HERSHEY_PLAIN, textSize, cv::Scalar(num, num, num), textWidth);
+		cv::FONT_HERSHEY_SIMPLEX, textSize, cv::Scalar(num, num, num), textWidth);
 	flip(complete, complete, -1); 
 	putText(complete, text, cv::Point(input.cols * 0.2222, input.rows * 0.2222),
-		cv::FONT_HERSHEY_PLAIN, textSize, cv::Scalar(num, num, num), textWidth);
+		cv::FONT_HERSHEY_SIMPLEX, textSize, cv::Scalar(num, num, num), textWidth);
 	flip(complete, complete, -1);
 
 	// 傅里叶逆变换
@@ -275,25 +277,28 @@ int main()
 	WaterMarkText wmt;
 
 	// ԭʼͼ��
-	Mat img = imread("./image/wallhaven-137628.jpg");
+	// Mat img = imread("./image/wallhaven-137628.jpg");
+	Mat img = imread("./image/s2.png");
+	// Mat img = imread("./image/resultsave-1.jpg");
+	// Mat img = imread("./image/resultsave-2.bmp");
 	imshow("ԭʼͼ��", img);
 
 	// ԭʼͼ����Ҷ�ֽ�
-	Mat imgFly = wmt.getWatermarkColorImage(img);
+	Mat imgFly = wmt.getWatermarkColorImage(img); // fft
 	imshow("ԭʼ��Ƭ����Ҷ�ֽ�", imgFly);
-	imwrite("./image/imgOriFly.jpg", imgFly * 255);
+	imwrite("./image/imgOriFly.jpg", imgFly * 255); // 원본 이미지의 fft 저장
 
 	// ԭʼͼ������ˮӡ
 	Mat result = wmt.addTextWatermarkColorImage(img, "CS SWJTU");
-	imshow("����ˮӡ��ͼ��", result);
+	imshow("����ˮӡ��ͼ��", result);  // 이미지에 txt넣은 화면 spatial
 
 	// ˮӡʵ��һ
-	Mat resultsave = result * 255; // ����֮ǰ����255
-	imwrite("./image/resultsave-1.jpg", resultsave);
-	Mat imgWatermark1 = imread("./image/resultsave-1.jpg");
-	Mat imgFly1 = wmt.getWatermarkColorImage(imgWatermark1);
-	imshow("ʵ��һˮӡ��ȡ", imgFly1);
-	imwrite("./image/testImgFly1.jpg", imgFly1 * 255);
+	Mat resultsave = result * 255; // ����֮ǰ����255  /// spatial데이터에 255곱함
+	imwrite("./image/resultsave-1.jpg", resultsave); /// spatial데이터 저장
+	Mat imgWatermark1 = imread("./image/resultsave-1.jpg");  // spatial 불러옴
+	Mat imgFly1 = wmt.getWatermarkColorImage(imgWatermark1);  // spatial 이미지로 부터 fft 
+	imshow("ʵ��һˮӡ��ȡ", imgFly1); // freq 표시
+	imwrite("./image/testImgFly1.jpg", imgFly1 * 255); // freq 이미지 저장
 
 	imwrite("./image/resultsave-2.bmp", resultsave);
 	Mat imgWatermark2 = imread("./image/resultsave-2.bmp");
