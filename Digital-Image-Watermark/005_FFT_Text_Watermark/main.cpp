@@ -272,39 +272,39 @@ cv::Mat WaterMarkText::getTransposeImage(const cv::Mat &input)
 
 ////
 
-int main()
+int main(int argc, char** argv)
 {
 	WaterMarkText wmt;
 
+	const char* env_input = std::getenv("INPUT");
+	const char* env_ifft  = std::getenv("IFFT_OUPUT");
+	const char* env_text  = std::getenv("TEXT"); // "CS SWJTU"
+
+	const char* env_result_spatial = std::getenv("RESULT_SPATIAL"); // "./image/resultsave-1.jpg"
+	const char* env_result_fft     = std::getenv("RESULT_FFT"); // "./image/testImgFly1.jpg"
+    // if() {
+    //     std::cout << "Your INPUT is: " << env_p << '\n';
+	// }
+
 	// ԭʼͼ��
-	// Mat img = imread("./image/wallhaven-137628.jpg");
-	Mat img = imread("./image/s2.png");
-	// Mat img = imread("./image/resultsave-1.jpg");
-	// Mat img = imread("./image/resultsave-2.bmp");
-	imshow("ԭʼͼ��", img);
+	Mat img = imread(env_input);
+	// imshow("ԭʼͼ��", img);
 
 	// ԭʼͼ����Ҷ�ֽ�
 	Mat imgFly = wmt.getWatermarkColorImage(img); // fft
-	imshow("ԭʼ��Ƭ����Ҷ�ֽ�", imgFly);
-	imwrite("./image/imgOriFly.jpg", imgFly * 255); // 원본 이미지의 fft 저장
+	// imshow("ԭʼ��Ƭ����Ҷ�ֽ�", imgFly);
+	imwrite(env_ifft, imgFly * 255); // 원본 이미지의 fft 저장
 
 	// ԭʼͼ������ˮӡ
-	Mat result = wmt.addTextWatermarkColorImage(img, "CS SWJTU");
-	imshow("����ˮӡ��ͼ��", result);  // 이미지에 txt넣은 화면 spatial
-
+	Mat result = wmt.addTextWatermarkColorImage(img, env_text);
+	// imshow("����ˮӡ��ͼ��", result);  // 이미지에 txt넣은 화면 spatial
 	// ˮӡʵ��һ
 	Mat resultsave = result * 255; // ����֮ǰ����255  /// spatial데이터에 255곱함
-	imwrite("./image/resultsave-1.jpg", resultsave); /// spatial데이터 저장
-	Mat imgWatermark1 = imread("./image/resultsave-1.jpg");  // spatial 불러옴
+	imwrite(env_result_spatial, resultsave); /// spatial데이터 저장
+	Mat imgWatermark1 = imread(env_result_spatial);  // spatial 불러옴
 	Mat imgFly1 = wmt.getWatermarkColorImage(imgWatermark1);  // spatial 이미지로 부터 fft 
-	imshow("ʵ��һˮӡ��ȡ", imgFly1); // freq 표시
-	imwrite("./image/testImgFly1.jpg", imgFly1 * 255); // freq 이미지 저장
-
-	imwrite("./image/resultsave-2.bmp", resultsave);
-	Mat imgWatermark2 = imread("./image/resultsave-2.bmp");
-	Mat imgFly2 = wmt.getWatermarkColorImage(imgWatermark2);
-	imshow("ʵ���ˮӡ��ȡ", imgFly2);
-	imwrite("./image/testImgFly2.bmp", imgFly2 * 255);
+	// imshow("ʵ��һˮӡ��ȡ", imgFly1); // freq 표시
+	imwrite(env_result_fft, imgFly1 * 255); // freq 이미지 저장
 
 	cv::waitKey(0);
 	return 0;
